@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Week 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <style>
+      .inProgress {
+        border: 5px solid black;
+        border-top: 5px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+    <table class="table table-responsive table-bordered">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>O/U</th>
+        <th>Best Bet</th>
+        <th>In Progress Score</th>
+        <th>Completed Score</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for player in players %}
+    <tr>
+        <th scope="row">{{ player.name }}</th>
+        {% for pick in player.picks %}
+              <td class={{ pick.css_class() }}>{{ pick.pick_string }}</td>
+  
+        {% endfor %}
+        
+        {% if player.ou.status() == 'IN PROGRESS' %}
+          {% if player.ou.isTied() %}
+            <td class="bg-warning">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+          {% elif player.ou.isWinning() %}
+            <td class="bg-success">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+            {% else %}
+            <td class="bg-danger">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+
+          {% endif %}
+        {% elif player.ou.status() == 'COMPLETED' %}
+          {% if player.ou.isTied() %}
+            <td class="table-warning">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+          {% elif player.ou.isWinning() %}
+            <td class="table-success">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+            {% else %}
+            <td class="table-danger">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+          {% endif %}
+        {% else %}
+           <td class="table-active">
+              <div>{{ player.ou.home }} @ {{ player.ou.away }}</div>
+              <div>{{ player.ou.pick_string }}</div>
+            </td>
+        {% endif %}
+        {% if player.best_bet.status() == 'IN PROGRESS' %}
+          {% if player.best_bet.isTied() %}
+            <td class="bg-warning">{{ player.best_bet.pick_string }}</td>
+          {% elif player.best_bet.isWinning() %}
+            <td class="bg-success">{{ player.best_bet.pick_string }}</td>
+          {% else %}
+            <td class="bg-danger">{{ player.best_bet.pick_string }}</td>
+          {% endif %}
+         {% elif player.best_bet.status() == 'COMPLETED' %}
+          {% if player.best_bet.isTied() %}
+            <td class="table-warning">{{ player.best_bet.pick_string }}</td>
+          {% elif player.best_bet.isWinning() %}
+            <td class="table-success">{{ player.best_bet.pick_string }}</td>
+          {% else %}
+            <td class="table-danger">{{ player.best_bet.pick_string }}</td>
+          {% endif %}
+        {% else %}
+           <td class="table-active">{{ player.best_bet.pick_string }}</td>
+        {% endif %}
+          <td>
+            {{ player.calc_score() }}
+          </td>
+          <td>
+            {{ player.calc_score(True) }}
+          </td>
+        
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
